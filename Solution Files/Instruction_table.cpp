@@ -103,6 +103,56 @@ std::string print_emulated_record(int inst_index, std::string arg, std::string l
 
 	return emulated_record;
 }
+
+int token_verifier(std::string token, int min_index, int max_index) 
+{
+	if (max_index < min_index) {
+		return (NOT_IN_TABLE);
+	}
+
+	int pivot_index = min_index + ((max_index - min_index) / 2);
+
+	if (token == inst_table[pivot_index].asm_inst) {
+		return pivot_index;
+	}
+
+	else if (token_offset(token, inst_table[pivot_index].asm_inst) == BEFORE) {
+		return token_verifier(token, min_index, (pivot_index - 1));
+	}
+
+	else 
+		return token_verifier(token, (pivot_index + 1), max_index);
+}
+
+int token_offset(std::string token, std::string asm_inst)
+{
+	int i = 0;
+
+	while (token[i] == asm_inst[i]) {
+		i++;
+	}
+
+	//while (i < asm_inst.length()) {
+	//	if (token[i] < asm_inst[i]) {
+	//		offset = BEFORE;
+	//		break;
+	//	}
+
+	//	else if (token[i] > asm_inst[i]) {
+	//		offset = AFTER;
+	//		break;
+	//	}
+	//	i++;
+	//}
+
+	if (token[i] < asm_inst[i]) {
+		return BEFORE;
+	}
+
+	else
+		return AFTER;
+}
+
 int arg_check(char record_arg_no, char inst_index)
 {
 	signed char offset = record_arg_no - inst_table[inst_index].retrieved_arg_amount;

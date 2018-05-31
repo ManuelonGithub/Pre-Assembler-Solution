@@ -32,22 +32,9 @@ int main(int argc, char * argv[])
 
 	//asm_file_out.open(out_file_name(argv[1]));
 
+	int index = token_verifier("TST.B", 0, size_of_table());
 
-	std::string line;
-
-	std::cout << print_emulated_record(0, "HELLO", "_WHAT_A_LABEL_") << std::endl;
-
-	//while (getline(asm_file_in, line))
-	//{
-	//	std::vector<std::string> tokens = record_tokenizer(line);
-
-	//	for (char i = 0; i < tokens.size(); i++) {
-	//		std::cout << tokens[i] << std::endl;
-	//	}
-
-	//	std::cout << std::endl;
-	//}
-
+	std::cout << index << std::endl;
 
 	asm_file_in.close();
 	asm_file_out.close();

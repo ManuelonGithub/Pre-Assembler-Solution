@@ -3,6 +3,8 @@
 #ifndef INSTRUCTION_TABLE_H
 #define INSTRUCTION_TABLE_H
 
+#define NOT_IN_TABLE -1
+
 enum inst_arg_possibilities { CORRECT_ARGS = 0, TOO_LITTLE_ARGS = -1, TOO_MANY_ARGS = 1 };
 enum retrieved_arg_syntax_pos { NO_ARG, BEFORE, AFTER, BOTH };
 
@@ -20,7 +22,10 @@ void print_whole_table(std::string arg = "", std::ostream &out = std::cout);
 
 std::string print_emulated_record(int inst_index, std::string arg = "", std::string label = "");
 
-int arg_check(char record_arg_no, char inst_index);
+int token_verifier(std::string token, int min_index, int max_index);
 
+int token_offset(std::string token, std::string asm_inst);
+
+int arg_check(char record_arg_no, char inst_index);
 
 #endif // !INSTRUCTION_TABLE_H
