@@ -18,7 +18,7 @@ int size_of_table();
 
 void print_whole_table(std::string arg = "", std::ostream &out = std::cout);
 
-std::string print_emulated_record(std::string arg, struct emulated_instruction inst);
+std::string print_emulated_record(int inst_index, std::string arg = "", std::string label = "");
 
 int arg_check(char record_arg_no, char inst_index);
 

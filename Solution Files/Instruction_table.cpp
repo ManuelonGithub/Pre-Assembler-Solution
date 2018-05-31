@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include "Instruction_table.h"
 
@@ -70,25 +71,25 @@ int size_of_table()
 void print_whole_table(std::string arg, std::ostream &out)
 {
 	for (int i = 0; i < size_of_table(); i++) {
-		out << print_emulated_record(arg, inst_table[i]) << std::endl;
+		out << print_emulated_record(i, arg) << std::endl;
 	}
 }
 
-std::string print_emulated_record(std::string arg, struct emulated_instruction inst)
+std::string print_emulated_record(int inst_index, std::string arg, std::string label)
 {
-	std::string emulated_record = inst.XM_emulated_inst + "\t";
+	std::string emulated_record = label + "    " + inst_table[inst_index].XM_emulated_inst + "\t";
 
-	switch (inst.retrieved_arg_pos) {
+	switch (inst_table[inst_index].retrieved_arg_pos) {
 	case NO_ARG:
-		emulated_record = emulated_record + inst.XM_emulated_inst_arg;
+		emulated_record = emulated_record + inst_table[inst_index].XM_emulated_inst_arg;
 		break;
 
 	case BEFORE:
-		emulated_record = emulated_record + arg + inst.XM_emulated_inst_arg;
+		emulated_record = emulated_record + arg + inst_table[inst_index].XM_emulated_inst_arg;
 		break;
 
 	case AFTER:
-		emulated_record = emulated_record + inst.XM_emulated_inst_arg + arg;
+		emulated_record = emulated_record + inst_table[inst_index].XM_emulated_inst_arg + arg;
 		break;
 
 	case BOTH:
