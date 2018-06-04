@@ -71,11 +71,11 @@ int size_of_table()
 void print_whole_table(std::string arg, std::ostream &out)
 {
 	for (int i = 0; i < size_of_table(); i++) {
-		out << print_emulated_record(i, arg) << std::endl;
+		out << record_emulation(i, arg) << std::endl;
 	}
 }
 
-std::string print_emulated_record(int inst_index, std::string arg, std::string label)
+std::string record_emulation(int inst_index, std::string arg, std::string label)
 {
 	std::string emulated_record = label + "    " + inst_table[inst_index].XM_emulated_inst + "\t";
 
@@ -104,7 +104,7 @@ std::string print_emulated_record(int inst_index, std::string arg, std::string l
 	return emulated_record;
 }
 
-int token_verifier(std::string token, int min_index, int max_index) 
+int verify_token(std::string token, int min_index, int max_index) 
 {
 	if (max_index < min_index) {
 		return (NOT_IN_TABLE);
@@ -117,11 +117,11 @@ int token_verifier(std::string token, int min_index, int max_index)
 	}
 
 	else if (token_offset(token, inst_table[pivot_index].asm_inst) == BEFORE) {
-		return token_verifier(token, min_index, (pivot_index - 1));
+		return verify_token(token, min_index, (pivot_index - 1));
 	}
 
 	else 
-		return token_verifier(token, (pivot_index + 1), max_index);
+		return verify_token(token, (pivot_index + 1), max_index);
 }
 
 int token_offset(std::string token, std::string asm_inst)
@@ -168,4 +168,13 @@ int arg_check(char record_arg_no, char inst_index)
 	else {
 		return TOO_LITTLE_ARGS;
 	}
+}
+
+int error_check(int inst_index, std::string label, int record_arg_count)
+{
+	if (label.size() > 32) {
+		return LABEL_TOO_LONG;
+	}
+
+	if ()
 }

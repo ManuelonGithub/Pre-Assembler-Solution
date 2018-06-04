@@ -5,7 +5,14 @@
 
 std::vector<std::string> record_tokenizer(std::string record)
 {
+
+
 	char prev_token_pos= 0, current_token_pos = 0;
+
+	current_token_pos = record.find_first_of(';');
+
+	record = record.substr(0, current_token_pos);
+
 	std::string token, delimiter = " ,";
 	std::vector<std::string> tokens;
 
@@ -24,7 +31,18 @@ std::vector<std::string> record_tokenizer(std::string record)
 	return tokens;
 }
 
-//std::string read_line()
-//{
-//
-//}
+void remove_comment(std::string &line)
+{
+	char current_token_pos = 0;
+
+	current_token_pos = line.find_first_of(';');
+
+	line = line.substr(0, current_token_pos);
+}
+
+void Capitalize_string(std::string &line)
+{
+	for (int i = 0; i < line.length(); i++) {
+		line[i] = toupper(line[i]);
+	}
+}
