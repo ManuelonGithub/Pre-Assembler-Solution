@@ -3,13 +3,11 @@
 #include <vector>
 #include "Record_operations.h"
 
-enum error_codes { NO_ERROR, LABEL_TOO_LONG, LABEL_NOT_ALPHANUM, TOO_MANY_ARGS, TOO_LITTLE_ARGS };
 
-std::vector<std::string> record_tokenizer(std::string record)
+void record_tokenizer(std::string record, std::vector<std::string> &tokens)
 {
-	char prev_token_pos= 0, current_token_pos = 0;
-	std::string token, delimiter = " ,";
-	std::vector<std::string> tokens;
+	size_t prev_token_pos= 0, current_token_pos = 0;
+	std::string token, delimiter = " , \t \n";
 
 	while (current_token_pos != std::string::npos) {
 
@@ -22,9 +20,8 @@ std::vector<std::string> record_tokenizer(std::string record)
 
 		prev_token_pos = current_token_pos + 1;
 	}
-
-	return tokens;
 }
+
 
 void remove_comment(std::string &line)
 {
@@ -35,6 +32,19 @@ void remove_comment(std::string &line)
 	line = line.substr(0, current_token_pos);
 }
 
+
+bool is_whitespace(std::string &line)
+{
+	for (int i = 0; i < line.size(); i++) {
+		if (!isblank(line[i])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
 std::string capitalize_string(std::string line)
 {
 	for (int i = 0; i < line.length(); i++) {
@@ -42,29 +52,4 @@ std::string capitalize_string(std::string line)
 	}
 
 	return line;
-}
-
-std::string error_message(int error_flag)
-{
-	switch (error_flag) {
-	case (NO_ERROR):
-		return "";
-		break;
-	case (LABEL_TOO_LONG):
-		return "; Error: Label is over 32 characters long";
-		break;
-	case (LABEL_NOT_ALPHANUM):
-		return "; Error: non-alphanumeric symbol in label";
-		break;
-	case (TOO_MANY_ARGS):
-		return "; Error: there are too many arguments for this instrution";
-		break;
-	case (TOO_LITTLE_ARGS):
-		return "; Error: there are not enough arguments for this instrution";
-		break;
-
-	default:
-		return "";
-		break;
-	}
 }

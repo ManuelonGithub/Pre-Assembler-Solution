@@ -3,12 +3,12 @@
 #ifndef TOKEN_OPERATIONS_H
 #define TOKEN_OPERATIONS_H
 	
-std::vector<std::string> record_tokenizer(std::string record);
+void record_tokenizer(std::string record, std::vector<std::string> &tokens);
 
 void remove_comment(std::string &line);
 
-std::string capitalize_string(std::string line);
+bool is_whitespace(std::string &line);
 
-std::string error_message(int error_flag);
+std::string capitalize_string(std::string line);
 
 #endif // !TOKEN_OPERATIONS_H

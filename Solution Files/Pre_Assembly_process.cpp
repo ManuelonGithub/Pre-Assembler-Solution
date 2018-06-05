@@ -8,11 +8,10 @@
 #include "Record_operations.h"
 
 
-void pre_assembly_process(std::string &record)
+void pre_assembly_process(std::string &record, char &error_code)
 {
 	bool output = !DONE;
 	char state = S0;
-	char error_flag = 0;
 	int matched_instruction_index = -1;
 	int args_in_record = 0;
 	std::string label;
@@ -24,12 +23,12 @@ void pre_assembly_process(std::string &record)
 		case(S0):
 			remove_comment(record);
 
-			if (record.empty()) {
+			if (record.empty() || is_whitespace(record)) {
 				state = S4;
 			}
 
 			else {
-				tokens = record_tokenizer(record);
+				record_tokenizer(record, tokens);
 				state = S1;
 			}
 			break;
@@ -38,7 +37,14 @@ void pre_assembly_process(std::string &record)
 			matched_instruction_index = verify_token(capitalize_string(tokens[0]));
 
 			if (matched_instruction_index == NOT_IN_TABLE) {
-				state = S2;
+				if (tokens.size() > 1) {
+					state = S2;
+				}
+				
+				else {
+					record += "\n";
+					state = S4;
+				}
 			}
 
 			else {
@@ -49,9 +55,10 @@ void pre_assembly_process(std::string &record)
 			break;
 
 		case(S2):
-			matched_instruction_index = verify_token(tokens[1]);
+			matched_instruction_index = verify_token(capitalize_string(tokens[1]));
 
 			if (matched_instruction_index == NOT_IN_TABLE) {
+				record += "\n";
 				state = S4;
 			}
 
@@ -60,17 +67,21 @@ void pre_assembly_process(std::string &record)
 				label = tokens[0];
 				args_in_record = tokens.size() - 2;
 			}
+			break;
 
 		case(S3):
-			error_flag = error_check(matched_instruction_index, label, args_in_record);
-			if (error_flag == 0) {
+			error_code = error_check(matched_instruction_index, label, args_in_record);
+			if (error_code == 0) {
 				record = record_emulation(matched_instruction_index, tokens[(tokens.size() - 1)], label);
+			}
+
+			else {
+				record += "\t; Error: " + error_message(error_code);
 			}
 			state = S4;
 			break;
 
 		case(S4):
-			std::cout << record << error_message(error_flag) << std::endl;
 			output = DONE;
 			break;
 
@@ -92,4 +103,29 @@ std::string out_file_name(std::string filename)
 		filename += "_out";
 
 	return filename;
+}
+
+std::string error_message(int error_code)
+{
+	switch (error_code) {
+	case (NO_ERROR):
+		return "";
+		break;
+	case (LABEL_TOO_LONG):
+		return "Label is over 32 characters long \n";
+		break;
+	case (LABEL_NOT_ALPHANUM):
+		return "Non-alphanumeric symbol in label \n";
+		break;
+	case (TOO_MANY_ARGS):
+		return "There are too many arguments for this instruction \n";
+		break;
+	case (TOO_LITTLE_ARGS):
+		return "There are not enough arguments for this instruction \n";
+		break;
+
+	default:
+		return "";
+		break;
+	}
 }

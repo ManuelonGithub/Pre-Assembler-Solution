@@ -33,7 +33,7 @@ const struct emulated_instruction inst_table[] = {
 	{ "INV", "XOR", "#-1,", AFTER, 1 },
 	{ "INV.W","XOR.W", "#-1,", AFTER, 1 },
 	{ "INV.B", "XOR.B", "#-1,", AFTER, 1 },
-	{ "JUMP", "MOV", ",rR7",  BEFORE, 1 },
+	{ "JUMP", "MOV", ",R7",  BEFORE, 1 },
 	{ "NOP", "MOV", "R6,R6", NO_ARG, 0 },
 	{ "PULL", "LD", "R5+,", AFTER, 1 },
 	{ "PUSH", "ST", ",-R5,", BEFORE, 1 },
@@ -77,23 +77,23 @@ void print_whole_table(std::string arg, std::ostream &out)
 
 std::string record_emulation(int inst_index, std::string arg, std::string label)
 {
-	std::string emulated_record = label + "    " + inst_table[inst_index].XM_emulated_inst + "\t";
+	std::string emulated_record = label + "\t" + inst_table[inst_index].XM_emulated_inst + "\t";
 
 	switch (inst_table[inst_index].retrieved_arg_pos) {
 	case NO_ARG:
-		emulated_record = emulated_record + inst_table[inst_index].XM_emulated_inst_arg;
+		emulated_record += inst_table[inst_index].XM_emulated_inst_arg;
 		break;
 
 	case BEFORE:
-		emulated_record = emulated_record + arg + inst_table[inst_index].XM_emulated_inst_arg;
+		emulated_record += arg + inst_table[inst_index].XM_emulated_inst_arg;
 		break;
 
 	case AFTER:
-		emulated_record = emulated_record + inst_table[inst_index].XM_emulated_inst_arg + arg;
+		emulated_record += inst_table[inst_index].XM_emulated_inst_arg + arg;
 		break;
 
 	case BOTH:
-		emulated_record = emulated_record + arg + "," + arg;
+		emulated_record += arg + "," + arg;
 		break;
 
 	default:
@@ -101,7 +101,7 @@ std::string record_emulation(int inst_index, std::string arg, std::string label)
 		break;
 	}
 
-	return emulated_record;
+	return (emulated_record + "\n");
 }
 
 int verify_token(std::string token, int min_index, int max_index) 
@@ -132,19 +132,6 @@ int token_offset(std::string token, std::string asm_inst)
 		i++;
 	}
 
-	//while (i < asm_inst.length()) {
-	//	if (token[i] < asm_inst[i]) {
-	//		offset = BEFORE;
-	//		break;
-	//	}
-
-	//	else if (token[i] > asm_inst[i]) {
-	//		offset = AFTER;
-	//		break;
-	//	}
-	//	i++;
-	//}
-
 	if (token[i] < asm_inst[i]) {
 		return BEFORE;
 	}
@@ -161,7 +148,7 @@ int error_check(int inst_index, std::string label, int record_arg_count)
 		}
 
 		for (int i = 0; i < label.size(); i++) {
-			if (!isalpha(label[i])) {
+			if (!isalnum(label[i])) {
 				return LABEL_NOT_ALPHANUM;
 			}
 		}

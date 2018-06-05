@@ -5,8 +5,10 @@
 
 #define NOT_IN_TABLE -1
 
-enum error_codes { NO_ERROR, LABEL_TOO_LONG, LABEL_NOT_ALPHANUM, TOO_MANY_ARGS, TOO_LITTLE_ARGS};
+extern enum error_codes;
+
 enum retrieved_arg_syntax_pos { NO_ARG, BEFORE, AFTER, BOTH };
+enum error_codes { NO_ERROR, LABEL_TOO_LONG, LABEL_NOT_ALPHANUM, TOO_MANY_ARGS, TOO_LITTLE_ARGS };
 
 struct emulated_instruction {
 	std::string asm_inst;
@@ -22,7 +24,7 @@ void print_whole_table(std::string arg = "", std::ostream &out = std::cout);
 
 std::string record_emulation(int inst_index, std::string arg = "", std::string label = "");
 
-int verify_token(std::string token, int min_index = 0, int max_index = 0);
+int verify_token(std::string token, int min_index = 0, int max_index = size_of_table());
 
 int token_offset(std::string token, std::string asm_inst);
 
