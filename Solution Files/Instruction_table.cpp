@@ -153,28 +153,29 @@ int token_offset(std::string token, std::string asm_inst)
 		return AFTER;
 }
 
-int arg_check(char record_arg_no, char inst_index)
-{
-	signed char offset = record_arg_no - inst_table[inst_index].retrieved_arg_amount;
-
-	if (offset == CORRECT_ARGS) {
-		return CORRECT_ARGS;
-	}
-
-	else if (offset > CORRECT_ARGS) {
-		return TOO_MANY_ARGS;
-	}
-
-	else {
-		return TOO_LITTLE_ARGS;
-	}
-}
-
 int error_check(int inst_index, std::string label, int record_arg_count)
 {
-	if (label.size() > 32) {
-		return LABEL_TOO_LONG;
+	if (!label.empty()) {
+		if (label.size() > 32) {
+			return LABEL_TOO_LONG;
+		}
+
+		for (int i = 0; i < label.size(); i++) {
+			if (!isalpha(label[i])) {
+				return LABEL_NOT_ALPHANUM;
+			}
+		}
 	}
 
-	if ()
+	if (record_arg_count != inst_table[inst_index].retrieved_arg_amount) {
+		if (record_arg_count > inst_table[inst_index].retrieved_arg_amount) {
+			return TOO_MANY_ARGS;
+		}
+
+		else {
+			return TOO_LITTLE_ARGS;
+		}
+	}
+
+	return NO_ERROR;
 }

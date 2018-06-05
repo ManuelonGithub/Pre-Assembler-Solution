@@ -26,8 +26,6 @@ int verify_token(std::string token, int min_index = 0, int max_index = 0);
 
 int token_offset(std::string token, std::string asm_inst);
 
-int arg_check(char record_arg_no, char inst_index);
-
 int error_check(int inst_index, std::string label, int record_arg_count);
 
 #endif // !INSTRUCTION_TABLE_H
